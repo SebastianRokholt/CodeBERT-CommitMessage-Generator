@@ -17,7 +17,6 @@
 
 import torch
 import torch.nn as nn
-# I CHANGED SOMETHING
 from transformers.models.roberta.modeling_roberta import (
     create_position_ids_from_input_ids,
     RobertaPreTrainedModel,

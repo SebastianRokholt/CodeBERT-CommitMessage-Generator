@@ -1,0 +1,5 @@
+https://github.com/psf/black
+https://github.com/keon/algorithms
+https://github.com/sherlock-project/sherlock
+https://github.com/charlax/professional-programming
+https://github.com/pytorch/examples
