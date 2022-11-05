@@ -1,0 +1,9 @@
+transformers
+flask==1.1.2
+itsdangerous==2.0.1
+torch
+click>=7.1.2
+gitpython>=3.1.7
+whatthepatch>=1.0.0
+packaging>=20.4
+easydict
