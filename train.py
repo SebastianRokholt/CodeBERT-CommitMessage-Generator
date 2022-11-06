@@ -450,14 +450,19 @@ def main():
 
 if __name__ == "__main__":
     main()
-    print(f"Total train steps: ", len(train_loss_progress_list))
-    print(f"Total eval steps: ", len(eval_loss_progress_list))
-    epochs = [i for i in range(len(train_loss_progress_list))]
-    plt.plot(epochs, train_loss_progress_list)
-    plt.plot(epochs, eval_loss_progress_list)
-    plt.title('Fine-Tuning Training Loss')
-    plt.xlabel('Training steps')
-    plt.ylabel('Model Loss')
-    plt.show()
-
-
+    with open("train_loss.txt", "w", encoding="UTF-8") as file:
+        for i, loss in enumerate(train_loss_progress_list):
+            file.write(f"{i}:" + str(loss) + "\n")
+    with open("eval_loss.txt", "w", encoding="UTF-8") as file:
+        for i, loss in enumerate(eval_loss_progress_list):
+            file.write(f"{i}:" + str(loss) + "\n")
+    
+    # print(f"Total train steps: ", len(train_loss_progress_list))
+    # print(f"Total eval steps: ", len(eval_loss_progress_list))
+    # epochs = [i for i in range(len(train_loss_progress_list))]
+    # plt.plot(epochs, train_loss_progress_list)
+    # plt.plot(epochs, eval_loss_progress_list)
+    # plt.title('Fine-Tuning Training Loss')
+    # plt.xlabel('Training steps')
+    # plt.ylabel('Model Loss')
+    # plt.show()
