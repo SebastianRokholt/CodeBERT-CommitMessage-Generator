@@ -1,3 +1,7 @@
+# Data, large files
+*pytorch_model.bin
+data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

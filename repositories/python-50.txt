@@ -2,7 +2,7 @@ https://github.com/SebastianRokholt/Data-Science-Projects
 https://github.com/SebastianRokholt/Hybrid-Recommender-System
 https://github.com/Jonnashell/info216-groupproject
 https://github.com/SebastianRokholt/Soccer-Predictions
-https://github.com/IBM/pytorch-seq2seq/
+https://github.com/IBM/pytorch-seq2seq
 https://github.com/tiangolo/fastapi
 https://github.com/TheAlgorithms/Python
 https://github.com/vinta/awesome-python

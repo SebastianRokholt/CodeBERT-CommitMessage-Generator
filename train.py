@@ -344,7 +344,7 @@ def main():
                     torch.save(model_to_save.state_dict(), output_model_file)  
                             
                             
-                #Calculate bleu  
+                # Calculate bleu  score
                 if 'dev_bleu' in dev_dataset:
                     eval_examples,eval_data=dev_dataset['dev_bleu']
                 else:
@@ -456,13 +456,3 @@ if __name__ == "__main__":
     with open("eval_loss.txt", "w", encoding="UTF-8") as file:
         for i, loss in enumerate(eval_loss_progress_list):
             file.write(f"{i}:" + str(loss) + "\n")
-    
-    # print(f"Total train steps: ", len(train_loss_progress_list))
-    # print(f"Total eval steps: ", len(eval_loss_progress_list))
-    # epochs = [i for i in range(len(train_loss_progress_list))]
-    # plt.plot(epochs, train_loss_progress_list)
-    # plt.plot(epochs, eval_loss_progress_list)
-    # plt.title('Fine-Tuning Training Loss')
-    # plt.xlabel('Training steps')
-    # plt.ylabel('Model Loss')
-    # plt.show()
