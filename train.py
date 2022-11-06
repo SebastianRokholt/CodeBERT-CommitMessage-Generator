@@ -37,10 +37,16 @@ from torch.utils.data.distributed import DistributedSampler
 from transformers import (AdamW, get_linear_schedule_with_warmup, RobertaConfig, RobertaTokenizer)
 
 import bleu
-from commit.model import Seq2Seq, RobertaModel
-from commit.utils import (convert_examples_to_features, Example)
+from greykode_commit.model import Seq2Seq, RobertaModel
+from greykode_commit.utils import (convert_examples_to_features, Example)
+
+import matplotlib.pyplot as plt
+
 
 MODEL_CLASSES = {'roberta': (RobertaConfig, RobertaModel, RobertaTokenizer)}
+train_loss_progress_list = []
+eval_loss_progress_list = []
+
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt = '%m/%d/%Y %H:%M:%S',
@@ -256,7 +262,8 @@ def main():
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
             tr_loss += loss.item()
-            train_loss=round(tr_loss*args.gradient_accumulation_steps/(nb_tr_steps+1),4)
+            train_loss=round(tr_loss*args.gradient_accumulation_steps/(nb_tr_steps+1), 5)
+            train_loss_progress_list.append(train_loss)
             bar.set_description("loss {}".format(train_loss))
             nb_tr_examples += source_ids.size(0)
             nb_tr_steps += 1
@@ -306,9 +313,10 @@ def main():
                                            target_ids=target_ids,target_mask=target_mask,patch_ids=patch_ids)
                     eval_loss += loss.sum().item()
                     tokens_num += num.sum().item()
-                #Pring loss of dev dataset    
+                #Print loss of dev dataset    
                 model.train()
                 eval_loss = eval_loss / tokens_num
+                eval_loss_progress_list.append(eval_loss)
                 result = {'eval_ppl': round(np.exp(eval_loss),5),
                           'global_step': global_step+1,
                           'train_loss': round(train_loss,5)}
@@ -440,11 +448,16 @@ def main():
 
 
 
-                            
-
-                
-                
 if __name__ == "__main__":
     main()
+    print(f"Total train steps: ", len(train_loss_progress_list))
+    print(f"Total eval steps: ", len(eval_loss_progress_list))
+    epochs = [i for i in range(len(train_loss_progress_list))]
+    plt.plot(epochs, train_loss_progress_list)
+    plt.plot(epochs, eval_loss_progress_list)
+    plt.title('Fine-Tuning Training Loss')
+    plt.xlabel('Training steps')
+    plt.ylabel('Model Loss')
+    plt.show()
 
 

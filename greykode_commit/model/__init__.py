@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from commit.model.diff_roberta import RobertaModel
-from commit.model.model import Seq2Seq
+from greykode_commit.model.diff_roberta import RobertaModel
+from greykode_commit.model.model import Seq2Seq
 
 __all__ = [
     'RobertaModel',
