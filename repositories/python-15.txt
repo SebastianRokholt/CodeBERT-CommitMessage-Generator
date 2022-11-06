@@ -1,0 +1,15 @@
+https://github.com/SebastianRokholt/Data-Science-Projects
+https://github.com/SebastianRokholt/Hybrid-Recommender-System
+https://github.com/Jonnashell/info216-groupproject
+https://github.com/SebastianRokholt/Soccer-Predictions
+https://github.com/psf/black
+https://github.com/keon/algorithms
+https://github.com/sherlock-project/sherlock
+https://github.com/charlax/professional-programming
+https://github.com/pytorch/examples
+https://github.com/IBM/pytorch-seq2seq/
+https://github.com/satwikkansal/wtfpython
+https://github.com/pypa/pipenv
+https://github.com/donnemartin/interactive-coding-challenges
+https://github.com/mitmproxy/mitmproxy
+https://github.com/donnemartin/data-science-ipython-notebooks
