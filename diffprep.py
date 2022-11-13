@@ -8,6 +8,9 @@ import json
 import random
 import jsonlines
 import spacy
+from tqdm import tqdm 
+from functools import partial
+from multiprocessing.pool import Pool
 import errno
 from pydriller import RepositoryMining
 from transformers import RobertaTokenizer
@@ -51,7 +54,7 @@ def process_commits(repos_dir, repo, codebert_tokenize="code_only"):
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), repo_path)
 
     # Loops over all commits in the repository (Python code only)
-    for commit in RepositoryMining(repo_path, only_modifications_with_file_types="py").traverse_commits():
+    for commit in RepositoryMining(repo_path, only_modifications_with_file_types=".py").traverse_commits():
         # Get the commit message text
         msg = commit.msg.split("\n")[0]
         # Remove unecessary characters from the message
@@ -136,14 +139,22 @@ with open(repositories, encoding="utf-8") as f:
 # Ensure that the output directory exists
 os.makedirs(output_dir, exist_ok=True)
 
-# Process the Git repositories
-for i, repo in enumerate(repos): 
-    print(f"Processing repo number {i + 1} out of {len(repos)} ({repo})")
-    try:
-        process_commits(repos_dir, repo, codebert_tokenize="code_only")
-    except FileNotFoundError as err:
-        print(err)
-        continue
+# Process the Git repositories with multiprocessing
+func = partial(process_commits, repos_dir=repos_dir, codebert_tokenize="code_only")
+print(repos)
+with Pool(processes=8) as pool:
+    with tqdm(total=len(repos)) as pbar:
+        for i, _ in tqdm(enumerate(pool.imap_unordered(func, repos))):
+            pbar.update()
+
+# # Process the Git repositories sequentially
+# for i, repo in enumerate(repos): 
+#     print(f"Processing repo number {i + 1} out of {len(repos)} ({repo})")
+#     try:
+#         process_commits(repos_dir, repo, codebert_tokenize="code_only")
+#     except FileNotFoundError as err:
+#         print(err)
+#         continue
 
 # Printing some negative samples from language detection task
 print(f"Some examples of words that were labelled as not English: ", english_not_detected[:30])

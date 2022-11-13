@@ -78,7 +78,7 @@ def main():
 
     # Read the repositories to crawl from file
     repositories = []
-    with open("repositories/python-50.txt", encoding="utf-8") as file:
+    with open("repositories/python-15.txt", encoding="utf-8") as file:
         for line in file:
             line = line.strip()
             repositories.append(line.replace('https://github.com/', ''))
