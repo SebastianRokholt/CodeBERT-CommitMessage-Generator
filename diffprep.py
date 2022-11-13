@@ -77,8 +77,8 @@ def process_commits(repos_dir, repo, codebert_tokenize="code_only"):
             continue
         # Discard commits that reference an issue, e.g. "#454123" or "gh-24558"
         filter_expr = re.compile(r'(#|gh-)[0-9]{3,}')
-        if any((match := filter_expr.search(msg_token)) for msg_token in msg_tokens):
-            print(f"Discarding commit, found issue reference in:\n{msg_token}")
+        matches = list(filter(filter_expr.match, msg_tokens)) # Read Note
+        if any(matches):
             continue
         
         # Looping over the file modifications in the commit
