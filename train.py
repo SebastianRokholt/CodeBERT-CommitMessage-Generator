@@ -40,8 +40,6 @@ import bleu
 from greykode_commit.model import Seq2Seq, RobertaModel
 from greykode_commit.utils import (convert_examples_to_features, Example)
 
-import matplotlib.pyplot as plt
-
 
 MODEL_CLASSES = {'roberta': (RobertaConfig, RobertaModel, RobertaTokenizer)}
 train_loss_progress_list = []

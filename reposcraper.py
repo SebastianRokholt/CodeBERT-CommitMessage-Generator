@@ -4,7 +4,7 @@ from time import sleep
 import os
 from threading import Thread
 
-class RepoScraper(object):
+class RepoScraper():
     """
     "Scrapes" Git Repositories, i.e. downloads by git cloning them. 
     """
@@ -18,7 +18,9 @@ class RepoScraper(object):
         self.total_n_repos = len(repositories)
         self.download_path = download_path
 
-        for _ in range(4):
+        # Multithreading with 16 threads.
+        # NB! More threads => higher memory usage
+        for _ in range(16):
             _thread = Thread(target=self.cloner)
             _thread.daemon = True
             _thread.start()
@@ -34,7 +36,7 @@ class RepoScraper(object):
                 f'{self.download_path}/{repo_gh_file_path}'
             )
 
-            sleep(0.45)  # Trying to avoid blacklisting due to high page request frequency
+            sleep(0.2)  # Trying to avoid blacklisting due to high page request frequency
 
             self.count += 1 
             print(f"Progress: {self.count} out of {self.total_n_repos} downloaded. ")
@@ -46,30 +48,40 @@ class RepoScraper(object):
 
     def cloner(self):
         """
-        Clones the github repos according to the crawl queue
+        Runs the crawling method (clone_repos) on the repositories according to the crawl queue. 
+        Called by the multithreading daemon. 
+        Terminates when the crawl queue is empty. 
         """
         while True:
-            repo_file_path = self.queue.get()
-            self.clone_repos(repo_file_path)
-            self.queue.task_done()
+            repo_file_path = self.queue.get()  # Retrieves the next repo from the queue
+            self.clone_repos(repo_file_path)  # Runs the crawling method on the repo
+            self.queue.task_done()  # Registers the task (crawling the repo) as completed
 
     def join_queue(self):
+        """
+        Blocks until all repos in the crawl queue have been gotten and processed.
+        Unblocks when count of unfinished tasks drops to zero.
+        """
         self.queue.join()
 
     def put_queue(self, repo_file_path):
+        """
+        Puts a repo into the crawl queue. 
+        """
         self.queue.put(repo_file_path)
         
 
 
 def main():
-    download_path="data/raw_repo_data/"
+    download_path="data/raw/python"
     os.makedirs(download_path, exist_ok=True)
+
+    # Read the repositories to crawl from file
     repositories = []
     with open("repositories/python-50.txt", encoding="utf-8") as file:
         for line in file:
             line = line.strip()
             repositories.append(line.replace('https://github.com/', ''))
-
     print("Repositories to crawl:", repositories)
 
     # Instantiate the repo scraper
@@ -77,6 +89,7 @@ def main():
 
     # Start scraping
     for repo in repositories:
+        # Put each repo in the crawl queue
         scraper.put_queue(repo)
     scraper.join_queue()
 
